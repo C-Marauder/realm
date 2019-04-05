@@ -33,8 +33,13 @@ dependencies {
 
 }
 
+ext {
+    gitUrl = 'https://github.com/xqy666666/realm.git'
+    siteUrl = 'https://github.com/xqy666666/realm'
 
-group = 'com.xqy.androidx'
+
+}
+group = 'com.xqy.androidx.realm'
 version = '1.0.0'
 install {
     repositories.mavenInstaller {
@@ -42,6 +47,10 @@ install {
         pom {
             project {
                 packaging 'aar'
+                groupId 'com.xqy.androidx.realm'
+                artifactId 'realm'
+                name 'realm'
+                url siteUrl
                 licenses {
                     license {
                         name 'The Apache Software License, Version 2.0'
@@ -51,10 +60,15 @@ install {
 
                 developers {
                     developer { // 开发者信息
-                        id 'xqy'
+                        id 'xqy666'
                         name '啊撸啊撸'
                         email '17775621462@163.com'
                     }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
                 }
 
             }
@@ -79,6 +93,45 @@ publishing {
                 }
             }
         }
+    }
+}
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.sourceFiles
+
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.sourceFiles
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+
+}
+task classesJar(type: Jar) {
+    from "$buildDir/intermediates/classes/release"
+
+}
+
+artifacts {
+    archives classesJar
+    archives javadocJar
+    archives sourcesJar
+
+}
+
+javadoc {
+    options {
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        author true
+        version version
+        links "http://docs.oracle.com/javase/7/docs/api"
+        title 'ui'
     }
 }
 
